@@ -1,36 +1,30 @@
-
-import express from 'express';
-import path from 'path';
-import { ENV } from './lib/env.js';
-
+import express from "express";
+import path from "path";
+import { ENV } from "./lib/env.js";
 
 const app = express();
+const __dirname = path.resolve();
 
-const __dirname= path.resolve()
-
-
-app.get('/happy', (req, res) => {
-  res.status(200).json({ message: 'Server is running ' });
-}
-);
-app.get("/books", (req, res) => {
-  res.status(200).json({ message: "Server is running " });
+app.get("/happy", (req, res) => {
+  res.json({ message: "Server is running" });
 });
 
-//make our app for deployment
+app.get("/books", (req, res) => {
+  res.json({ message: "Server is running" });
+});
 
-if (ENV.NODE_ENV === 'production') { 
-  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+// Serve frontend in production
+if (ENV.NODE_ENV === "production") {
+  const publicPath = path.join(__dirname, "./public");
 
-  app.get('/{*any}', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../frontend/dist/index.html'));
+  app.use(express.static(publicPath));
+
+  // Catch-all route must be "*", NOT "/{*any}"
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(publicPath, "index.html"));
   });
 }
 
 app.listen(ENV.PORT, () => {
-  console.log(`Server is running on port ${ENV.PORT}`);
+  console.log(`Server running on port ${ENV.PORT}`);
 });
-
-
-
-
