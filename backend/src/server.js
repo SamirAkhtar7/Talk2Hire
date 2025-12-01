@@ -1,14 +1,21 @@
 import express from "express";
 import path from "path";
+import { fileURLToPath } from "url";
 import { ENV } from "./lib/env.js";
 
 const app = express();
-const __dirname = path.resolve();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-}
-);
+  if (ENV.NODE_ENV === "production") {
+    const publicPath = path.join(__dirname, "../public");
+    return res.sendFile(path.join(publicPath, "index.html"));
+  }
+
+  res.json({ message: "Server is running" });
+});
 
 app.get("/happy", (req, res) => {
   res.json({ message: "Server is running" });
@@ -20,11 +27,11 @@ app.get("/books", (req, res) => {
 
 // Serve frontend in production
 if (ENV.NODE_ENV === "production") {
-  const publicPath = path.join(__dirname, "./public");
+  const publicPath = path.join(__dirname, "../public");
 
   app.use(express.static(publicPath));
 
-  // Catch-all route must be "*", NOT "/{*any}"
+  // Catch-all route for client-side routing (use regex to avoid path-to-regexp '*' parsing)
   app.get(/.*/, (req, res) => {
     res.sendFile(path.join(publicPath, "index.html"));
   });
