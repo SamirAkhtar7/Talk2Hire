@@ -16,7 +16,7 @@ function App() {
 
       <SignedIn>
         <SignOutButton>
-        
+        logout
         </SignOutButton>
        
       </SignedIn>
