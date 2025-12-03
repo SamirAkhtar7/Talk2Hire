@@ -3,11 +3,24 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { ENV } from "./lib/env.js";
 import { connectDB } from "./lib/db.js";
+import cors from "cors";
+import { serve } from "inngest/express"
+import { inngest } from "./lib/inngest.js";
+import { functions } from "./lib/inngest.js";
 
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+//middleware
+app.use(express.json())
+
+//credentials : true allows cookies to be sent/received in cross-origin requests
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }))
+
+app.get("/api/inngest", serve({ client: inngest, functions }));
+
 
 app.get("/", (req, res) => {
   if (ENV.NODE_ENV === "production") {
