@@ -1,5 +1,5 @@
 import React from 'react'
-import { SignedIn,SignedOut, SignInButton, SignOutButton } from '@clerk/clerk-react'
+import { SignedIn,SignedOut, SignInButton,UserButton ,SignOutButton } from '@clerk/clerk-react'
 
 function App() {
 
@@ -9,17 +9,15 @@ function App() {
       <h1>Welcome to the app</h1>
 
       <SignedOut>
-        <SignInButton mode="modal" >
+        <SignInButton mode="modal">
           <button>login</button>
-          </SignInButton>
+        </SignInButton>
       </SignedOut>
 
       <SignedIn>
-        <SignOutButton>
-        logout
-        </SignOutButton>
-       
+        <SignOutButton>logout</SignOutButton>
       </SignedIn>
+      <UserButton />
     </>
   );
 }
