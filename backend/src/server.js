@@ -19,6 +19,8 @@ app.use(express.json())
 //credentials : true allows cookies to be sent/received in cross-origin requests
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }))
 
+//inngest 
+
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
 
